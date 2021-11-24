@@ -1,1 +1,97 @@
+#Python type hierarchy
+1.Numbers
+Integrals           Non integrals
+Integers            Floats
+Booleans            Complex
+                    Decimals
+                    Fractions
+                    
+2. Collections
+Sequences (Mutable: Lists, Immutable: Tuples,Strings)
+Sets (Mutable: Sets, Immutable:Frozen Sets )
+Mappings (Dictionaries)
 
+3.Callables
+User defined functions, generators, Classes, Instance methods, Class instance(__call__()), Builts-in functions (ex: Len(),open()), Builts-in methods(my_list.append(x))
+
+4.Singletons
+none, NotImplemented, Elipssis
+
+
+Python Program
+
+physical lines of code - end with a physical newline character
+logical lines of code - end with a logical NEWLINE token
+
+Q)physical newline vs logical newline
+sometimes, physical newlines are ignored in order to combine multiple physical lines terminated by a logical NEWLINE token into a single logical line of code
+
+Conversion of physical to logical can be implicit or explicit
+Implicit conversion exapmles
+Expressions in:
+list literals: [ ]                    
+tuple literals: ( )
+dictionary literals: { }
+set literals: { }
+function arguments / parameters
+
+
+[1, 
+2, 
+3]   --> this will be converted to [1,2,3]
+
+or
+Implicit conversions supports inline comments as well.
+[1, #item 1 
+2, #item 2
+3 #item 3
+] --> comments and physical new lines will be stripped off and [1,2,3] will be geerated
+
+or 
+def my_func(a, 
+b, #comment
+c):   -->  this will be converted to def my_func(a,b,c)
+print(a, b, c)
+
+or
+
+my_func(10, #comment
+20, 30)    --> my_func(10,20,30)
+
+we are writing the new codes in next line on purpose may be to increase human readability. Here the physical newlines are ignored by interpreter.
+
+Explicit conversion exapmles
+
+You can break up statements over multiple lines explicitly, by using the \ (backslash ) character
+Multi-line statements are not implicitly converted to a single logical line.
+
+if a 
+and b
+and c:  --> This code does not work because this is a multi-line statement. In order to make this work, we will do the below 
+
+if a \
+and b \
+and c:
+
+Comments cannot be part of a statement, not even a multi-line statement.
+
+if a \
+and b \ #comment
+and c:          --> This is not permitted and this does not work.
+
+Multi-Line String Literals
+
+
+Multi-line string literals can be created using triple delimiters (' single or " double)
+
+'''This is
+a multi-line string'''
+OR
+"""This is
+a multi-line string"""
+
+Be aware that non-visible characters such as newlines, tabs, etc. are actually part of the string – basically anything you type.
+You can use escaped characters (e.g. \n, \t), use string formatting, etc.
+A multi-line string is just a regular string.
+Multi-line strings are not comments, although they can be used as such,
+especially with special comments called docstrings.
