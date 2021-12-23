@@ -1,0 +1,8 @@
+'''
+What is dynamically typed language?
+example of static languague is Java
+int my_var =10
+and we cannot assign my_var a string as that will give an error.
+However, in Python,it is completely legal. why?
+Coz, we are not giving the memory address a name, but a we are referencing the object through a variable and that variable is given name. we are not naming the blovk of memory.
+'''
