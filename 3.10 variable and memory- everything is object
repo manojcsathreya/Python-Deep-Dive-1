@@ -1,0 +1,53 @@
+#everything in python is object
+#functions are objects of Function class
+#classes are objects of Class   etc
+
+a=10
+print(type(a)) #<class 'int'>
+
+b = int(10)
+print(type(b)) #<class 'int'>
+
+print(help(int)) #documentation of the class
+
+c = int()
+print(c) #0 - default
+
+d = int('101',base=2)
+print(d) #5
+
+def square(a):
+    return a**2
+
+print(type(square)) #<class 'function'>
+
+f = square
+print(id(square)) #2157313605984
+print(id(f)) #2157313605984
+print(f is square)#true
+
+def cube(a):
+    return a**3
+
+def select_function(id):
+    if id==1:
+        return square
+    else:
+        return cube
+    
+func = select_function(1)
+print(func(3)) #9
+
+func= select_function(5)
+print(func(4)) #64
+
+print(select_function(1)(3)) #9
+
+def execFunc(function_ref,value):
+    return function_ref(value)
+
+execFunc(square, 3) #9
+execFunc(cube, 2) #8
+    
+
+ 
