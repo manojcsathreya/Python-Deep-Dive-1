@@ -1,0 +1,48 @@
+#mutable vs immutable wrt function parameters
+
+
+#immutable
+def process(s):
+    print('inital value of param:{0}'.format(id(s))) #2157313991280
+    s = s +' world' 
+    print(s) #Hello world
+    print('Final value of param:{0}'.format(id(s))) #2157309768240
+    
+s = 'Hello'
+print(s) #Hello
+print(id(s)) #2157313991280
+process(s)
+print(s) #Hello
+print(id(s)) #2157313991280
+
+
+#mutable
+def modify_list(lst):
+    print('inital value of param:{0}'.format(id(lst))) #2157314201152
+    lst.append('100')
+    print(lst) #[1,2,3,'100']
+    print('Final value of param:{0}'.format(id(lst))) #2157314201152
+    
+lst = [1,2,3]
+print(lst) #[1, 2, 3]
+print(id(lst)) #2157314201152
+modify_list(lst)
+print(lst) #[1,2,3,100']
+print(id(lst)) #2157314201152
+
+
+#list nut immutable
+def modify_list(lst):
+    print('inital value of param:{0}'.format(id(lst))) #2157313994048
+    lst=lst+[100]
+    print(lst) #[1, 2, 3, 100]
+    print('Final value of param:{0}'.format(id(lst))) #2157314199424
+    
+lst = [1,2,3]
+print(lst) #[1, 2, 3]
+print(id(lst)) #2157313994048
+modify_list(lst)
+print(lst) #[1,2,3]
+print(id(lst)) #2157313994048
+
+
