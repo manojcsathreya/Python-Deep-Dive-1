@@ -45,4 +45,15 @@ modify_list(lst)
 print(lst) #[1,2,3]
 print(id(lst)) #2157313994048
 
-
+#immutable but mutable
+def mod_tup(t):
+    print('Initial value:{0}'.format(id(t))) #2157312676800
+    t[0].append(100)
+    print(t) #([1, 2, 3, 100], 'a')
+    print('Final value:{0}'.format(id(t))) #2157312676800
+    
+tup = ([1,2,3],'a')
+print(id(tup))#2157312676800
+mod_tup(tup)
+print(id(tup))#2157312676800
+print(tup) #([1, 2, 3, 100], 'a')
