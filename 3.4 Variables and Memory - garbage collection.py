@@ -1,5 +1,10 @@
 '''
+Generally objects get destroyed when we don not ahve any reference pouinting at em. But sometimes this does not happen. But why? because of circular reference.
+myvar -> obj a (var1) -> obj b (var2) ->obj a
 
+if we destroy the reference myvar, obj a will be referencing obj b and obj will be referencing obj a. In this case the reference counting does not help. We have to use garbage collection and this phenomenon is known as Memory leak
+
+Python 3.4 and > are having GC which are capable of detecting and fixing memory leaks.
 '''
 
 
