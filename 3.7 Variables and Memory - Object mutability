@@ -1,0 +1,49 @@
+'''
+Objects mutable vs immutable
+
+Immutable
+Numbers
+Strings
+Boolean
+Tuples
+Frozensets
+User defined functions
+
+Mutable
+Lists
+sets
+Dictionary
+User defined class
+
+'''
+
+
+lst = [1,2,3]
+print(hex(id(lst))) #op: 0x1f64aaaf140
+
+lst2 = lst
+print(hex(id(lst2))) #op: 0x1f64aaaf140
+
+lst3 = [1,2,3]
+print(hex(id(lst3))) #op: 0x1f649da2d80
+
+lst4 = lst3 +[4]
+print(hex(id(lst4))) #op:0x1f649f25580
+
+
+#consider the example below
+lst5 = [1,2,3,4]
+print(hex(id(lst5)))#op: 0x1f649f1ec00
+lst5 = lst5 + [5]
+print(hex(id(lst5))) #op:0x1f64aaae580
+# we get different address, because python evaluates the expression from left
+# so it takes elemets from left adds it and places in new address
+
+#we can make tuples mutabele iff we have mutable objects inside tuples
+t =(1,2,3)
+print(id(t))#Op: 2157309507648
+# in the above case he tuple and interger objects are immutable. But consider the next example
+t = ([1,2],[3,4])
+print(type(t)) #tuple
+t[0].append(6) # completely legal
+print(t) #([1, 2, 6], [3, 4])
