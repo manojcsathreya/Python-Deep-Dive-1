@@ -1,0 +1,22 @@
+#interning is a method used by python interpreter for optimization and to lessen memory usage 
+
+a= 10
+b =10
+print(a is b) #True
+c = 300
+d =300
+print(c is d)#False
+
+'''
+a and b share same memory location. But c and d does not. WHy?
+This is because of interning.
+WHat is Interning? -- At startup python pre-loads a gloal list of integers in the range [-5,256]
+the interned objects are called singletons
+
+'''
+a = 10
+b =int(10)
+c = int('10')
+d = int('1010',base=2)
+print(a,b,c,d)# 10 10 10 10
+print((a is b) is(c is d)) #True
