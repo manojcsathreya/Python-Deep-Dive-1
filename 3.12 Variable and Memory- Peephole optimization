@@ -1,0 +1,51 @@
+'''
+Python - Peephole Optimization
+During run time viz, also compile time, some obejcts will be made constants for faster executuion. What are made constants?
+1.Constant expressions
+ex:numeric calculations
+24 * 60
+Python will actually pre-calculate 24 * 60 →1440
+ex:2:short sequences length < 20
+(1, 2) * 5
+'abc' * 3
+but not 'the quick brown fox' * 10 (more than 20 characters)
+'hello’ + ‘ world’
+etc
+'''
+
+'''
+Second type of optimization:
+Membership Tests: Mutables are replaced by Immutables
+When membership tests such as:
+if e in [1, 2, 3]:
+are encountered, the [1, 2, 3] constant, is replaced by its immutable counterpart
+(1, 2, 3) tuple
+
+• lists →tuples
+• sets →frozensets
+
+Set membership is much faster than list or tuple membership (sets are basically like dictionaries)
+So, instead of writing:
+if e in [1, 2, 3]: or if e in (1, 2, 3):
+
+write if e in {1, 2, 3}:
+
+'''
+
+def my_func():
+    a =24*60
+    b = (1,2)*5
+    c = 'abc'*3
+    d = 'ab'*20
+    e = 'quick brown fox'*5
+    f = ['a','b']*3
+
+my_func.__code__.co_consts
+'''
+(None, 1440, (1, 2, 1, 2, 1, 2, 1, 2, 1, 2), 'abcabcabc', 'ababababababababababab', 'quick brown foxquick brown foxquick brown foxquick brown foxquick brown fox', 'a', 'b', 3)
+'''
+def my_func(e):
+    if e in [1,2,3]:
+        pass
+    
+my_func.__code__.co_consts#(None, (1, 2, 3))
