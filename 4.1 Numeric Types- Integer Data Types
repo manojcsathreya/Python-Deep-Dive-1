@@ -1,0 +1,45 @@
+# Python does not allocate fixed memory for any data types. It is all dynamic.
+# But it has fixed overhead of memory
+
+print(type(100)) #<class 'int'>
+import sys
+print(sys.getsizeof(0)) #24
+#in the above example, 24 bytes of overhead is required. That is, 24 bytes of memory is required for object creation
+print(sys.getsizeof(1)) #28 - 24+4 - 4bytes to store 1
+print(sys.getsizeof(2**1000)) #160
+print(2**1000)
+#10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376
+
+import time
+def calc(n):
+    for i in range(1000000):
+        n*2
+        
+start = time.perf_counter()
+calc(2)
+end = time.perf_counter()
+print('time for 2',end-start)
+#time for 2  0.11394629999878816
+start = time.perf_counter()
+calc(10)
+end = time.perf_counter()
+print('time for 10',end-start)
+#time for 10 0.13457799999741837
+
+start = time.perf_counter()
+calc(1000)
+end = time.perf_counter()
+print('time for 1000',end-start)
+#time for 1000 0.2098044000013033
+
+start = time.perf_counter()
+calc(2**10000)
+end = time.perf_counter()
+print('time for 2**1000',end-start)
+#time for 2**1000 0.9667297999985749
+
+#Computational time increases as the size of int integer increases
+
+
+
+
