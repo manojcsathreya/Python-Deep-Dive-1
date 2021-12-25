@@ -1,0 +1,64 @@
+'''
+Integers operation
+int + int = int
+int - int = int
+int * int = int
+int / int = float
+int // int = int
+int % int = int
+
+what is floor division? - a//b
+a = b * (a//b) + (a%b)
+
+a = 13
+b =4
+13 / 4 = 3.25
+13 // 4 = 3
+13 % 4 = 1
+
+ex 2:
+a = -13
+b = 4
+-13/4 = -3.25 
+-13 // 4 = -4
+-13 % 4 = 3
+
+ex 3:
+a = 13
+b = -4
+13 / -4 = -3.25
+13 // -4 = -4
+13 % 4 = 3
+
+ex 4:
+a = -13
+b = -4
+-13/-4 = 3.25
+-13 // -4 = 3
+-13 % -4 = -1
+'''
+
+print(type(1+1)) #<class 'int'>
+print(type(2*3)) #<class 'int'>
+print(type(4-10)) #<class 'int'>
+print(type(3**6)) #<class 'int'>
+print(type(2/3)) #<class 'float'>
+print(type(10/2)) #<class 'float'>
+
+import math
+print(math.floor(3.15)) #3
+print(math.floor(3.99999999)) #3
+
+print(math.floor(-3.999)) #-4
+print(math.floor(-3.000000000000001)) #-4 ex1
+print(math.floor(-3.0000000000000001)) #-3 ex2
+'''
+woah! whats hapeening? 14 zeros in ex1 is printing -4 but 15 zeros in ex2 is printing -3
+it is all because of precision. for float the max number of decimal points are 15.
+So anything that comes after 15 decimal places are dropped.
+'''
+a = 13
+b = 4
+print(13/4) #13.25
+print(13//4) #3
+print(math.floor(13/4)) #3
