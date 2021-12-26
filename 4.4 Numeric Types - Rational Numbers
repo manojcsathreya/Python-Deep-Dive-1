@@ -1,0 +1,141 @@
+'''
+Rational numbers are fractions of integer numbers
+Ex:1/2 or 22/7
+
+
+Any real number with a finite number of digits after the decimal point is also a rational number
+
+So
+
+0.45 → 45/100
+0.123456789 -> 123456789/10 power 9
+8.3/4  -> 83/40
+8.3/1.4  -> 83/14
+
+The Fraction Class
+Rational numbers can be represented in Python using the Fraction class in the fractions module
+
+from fractions import Fraction
+x = Fraction(3, 4) -- 3/4
+y = Fraction(22, 7) -- 22/7
+z = Fraction(6, 10) --  6/10
+
+Fractions are automatically reduced:
+Fraction(6, 10) → Fraction(3, 5)
+
+Negative sign, if any, is always attached to the numerator:
+Fraction(1, -4) → Fraction(-1, 4)
+
+Constructors
+
+Fraction(numerator=0, denominator=1)  -- default numerator is 0 and default denominator is 1
+Fraction(other_fraction)
+Fraction(float)
+Fraction(decimal)
+Fraction(string)
+
+Fraction('10') → Fraction(10, 1)
+
+Fraction('22/7') → Fraction(22, 7)
+
+Fraction('0.125') → Fraction(1, 8)
+
+
+Standard arithmetic operators are supported: +, -, *, / and result in Fraction objects as well
+Fraction(2, 3) * Fraction(1, 2) → Fraction(1, 3)
+ Fraction(2, 3) + Fraction(1, 2) → Fraction(7, 6)
+ 
+getting the numerator and denominator of Fraction objects:
+x = Fraction(22, 7)
+x.numerator → 22
+x.denominator → 7
+
+float objects have finite precision ⇒ any float object can be written as a fraction!
+Fraction(0.75) → Fraction(3, 4)
+Fraction(1.375) → Fraction(11, 8) 
+
+import math
+x = Fraction(math.pi) → Fraction(884279719003555, 281474976710656)
+y = Fraction(math.sqrt(2)) → Fraction(6369051672525773, 4503599627370496)
+
+Even though π and 2^1/2 are both irrational but internally represented as floats expressible as a rational number
+
+⇒ finite precision real number
+
+but it is an approximation
+-------------------------------------------------------------------------------
+Caution: Converting a float to a Fraction has an important caveat
+We'll examine this in detail in a later video on floats
+
+1/8 has an exact float representation
+Fraction(0.125) → Fraction(1, 8)
+
+3/10 does not have an exact float representation
+Fraction(0.3) → Fraction(5404319552844595, 18014398509481984)
+Wait. What?? It is supposed to show 3/10. But the answer is no where near.
+format(0.3, '.5f') → 0.30000
+Till 5th precision it is fine. But we'll print the number till 25th precision.
+format(0.3, '.25f') → 0.2999999999999999888977698
+This is no more a 0.3. But why is this stored this way?? -- We'll talk about it later.
+
+
+--------------------------------------------------------------------------------
+Constraining the denominator
+
+Given a Fraction object, we can find an approximate equivalent fraction 
+with a constrained denominator
+using the limit_denominator(max_denominator=1000000) instance method
+i.e. finds the closest rational (which could be precisely equal)
+with a denominator that does not exceed max_denominator
+
+x = Fraction(math.pi) → Fraction(884279719003555, 281474976710656)  3.141592653589793
+
+x.limit_denominator(10) → Fraction(22, 7)                           3.142857142857143
+
+x.limit_denominator(100) → Fraction(311, 99)                        3.141414141414141
+
+x.limit_denominator(500) → Fraction(355, 113)                       3.141592920353983
+
+--------------------------------------------------------------------------------                                
+
+'''
+
+
+from fractions import Fraction
+print(help(Fraction))
+
+print(Fraction(22,7))                               #22/7
+print(Fraction(numerator=22,denominator=7))         #22/7
+print(Fraction(denominator=7,numerator=22))         #22/7
+print(Fraction('22/7'))                             #22/7
+print(Fraction(0.125))                              #1/8
+x = Fraction(2,3)
+y = Fraction(3,4)
+print(x+y)                                          #17/12
+print(x*y)                                          #1/2
+print(x/y)                                          #8/9
+print(Fraction(8,16))                               #1/2
+print(Fraction(-1,4))                               #-1/4
+x = Fraction(1/-4)
+print(x.numerator)                                  #-1 -- though negative in denominator, it trates the faction with negative numerator
+print(x.denominator)                                #4
+
+import math
+x = Fraction(math.pi)
+print(float(x))                                     #3.141592653589793
+print(x)                                            #884279719003555/281474976710656
+
+y = Fraction(math.sqrt(2))
+print(y)                                            #6369051672525773/4503599627370496
+print(float(y))                                     #1.4142135623730951
+a = 0.125
+b = 0.3
+print(Fraction(a))                                  #1/8
+print(Fraction(b))                                  #5404319552844595/18014398509481984
+print(format(b , '0.5f'))                           #0.30000
+print(format(b , '0.15f'))                          #0.300000000000000
+print(format(b , '0.20f'))                          #0.29999999999999998890
+b = Fraction(0.3)
+b.limit_denominator(10)                             #Fraction(3, 10)
+d = Fraction(math.pi)
+print(d.limit_denominator(10))                      #22/7
