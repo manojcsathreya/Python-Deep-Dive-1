@@ -1,0 +1,74 @@
+'''
+An integer number is an object – an instance of the int class
+
+The int class provides multiple constructors
+
+a = int (10)
+a = int (-10)
+
+Other (numerical) data types are also supported in the argument of the int constructor:
+a = int("10")-10 ex of strings
+a = int(10.9)-10 ex of float
+a = int(True) -1 ex of boolean
+a = int(Decimal("10.9")) - truncation: a →10
+a = int(-10.9) truncation: a →-10
+
+Number Base
+int("123") → (123)10
+When used with a string, constructor has an optional second parameter: base
+If base is not specified, the default is base 10 – as in the example above
+Base range:
+2 <= base <= 36
+
+int("1010", 2) → (10)base10 
+or int("1010", base=2) → (10)base 10
+int("A12F", base=16) → (41263) base 10 
+or                                     CASE DOES NOT MATTER HERE!!!
+int("a12f", base=16) → (41263)base 10 
+int("534", base=8) → (348) base 10
+int("A", base=11) - (10) base 10
+
+int("B", 11) ValueError: invalid literal for int() with base 11: 'B'
+
+
+
+Reverse Process: changing an integer from base 10 to another base
+
+built-in functions: bin() bin(10) → '0b1010'
+
+oct()   oct(10) → '0o12'
+
+hex()   hex(10) → '0xa'
+
+
+The prefixes in the strings help document the base of the number int('0xA', 16) → (10)10
+
+These prefixes are consistent with literal integers using a base prefix (no strings attached!)
+a = 0b1010 -  a → 10
+a = 0o12  - a → 10
+a = 0xA -  a → 10
+'''
+
+print(type(10)) #<class 'int'>
+
+help(int) #provides documentation
+
+print(int(10)) #10
+print(int(10.5)) #10
+print(int(10.99999)) #10
+
+import fractions
+a = fractions.Fraction(22,7)
+print(a)         #22/7
+print(float(a))  #3.142857142857143
+print(int(a))    #3
+
+
+print(bin(10))          #0b1010
+print(bin(0b1010))      #0b1010
+print(oct(10))          #0o12
+b = 0b1010
+print(b)                #10
+
+
+
