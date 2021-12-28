@@ -1,0 +1,66 @@
+'''
+Floats
+
+The float class is Python's default implementation for representing real numbers
+
+The Python (CPython) float is implemented using the C double type which (usually!) implements the IEEE 754 double-precision binary float, also called binary64
+
+The float uses a fixed number of bytes → 8 bytes (but Python objects have some overhead too) → 24 bytes (CPython 3.6 64-bit)
+                                       → 64 bits
+                                       
+These 64 bits are used up as follows:
+sign → 1 bit
+exponent → 11 bits  → range [-1022, 1023]  1.5E-5 → 1.5 x 10-5  exponent is -5
+significant digits → 52 bits → 15-17 significant (base-10) digits
+
+significant digits → for simplicity, all digits except leading and trailing zeros
+1.2345 1234.5 12345000000 0.00012345 12345e-50 1.2345e10 -- all of them have 5 significant bits
+
+While we represent floats in binary too, we cannot represent some
+ex: (0.75) base 10 equivalent is (0.11)base 2
+(0.11) base 2 = (1/2+1/4) = (0.5+0.25) = (0.75) base 10
+(0.1101) base 2 = (1/2+1/4+0/8+1/16) = (0.8125) base 10
+However, we cannot have accurate representation for some number,
+ex: 1/10 = 0.1 base 10 does not ahve binary equivalent
+0.1 base 10 = (0.0 0011 0011 0011.......) base 2
+= 0/2+0/4+0/8+1/16+1/32+.....
+= 1/16 + 1/32 + 1/256 + 1/512 + 1/4096 + 1/8192+.......
+= 0.0625 + + 1/32 + 1/256 + 1/512 + 1/4096 + 1/8192+.......
+= 0.09375 +  1/256 + 1/512 + 1/4096 + 1/8192+.......
+=  0.09765625 + 1/512 + 1/4096 + 1/8192+.......
+= 0.099609375 + 1/4096 + 1/8192+.......
+=  0.0999755859375 + …
+
+it contracts to 0.1. but never accurate
+------------------------------------------------------------------------------------------------------
+
+So, some numbers that do have a finite decimal representation, do not have a finite binary representation, 
+and some do
+(0.75) 10 = (0.11) 2                      finite    exact float representation
+(0.8125) 10 = (0.1101) 2                  finite    exact float representation
+
+(0.1) 10 = (0 0011 0011 0011 …) 2         infinite  approximate float representation
+
+
+------------------------------------------------------------------------------------------------------
+
+
+'''
+
+print((float(10))        #10
+print(float(10.45))     #10.45
+print(float('10.45'))   #10.45
+
+float(22/7)             #value error
+from fractions import Fraction 
+print(float(Fraction(22/7)))  #3.142857142857143
+
+print(0.1)              #0.1
+print(format(0.1, '.15f'))      #0.100000000000000
+print(format(0.1, '.25f'))      #0.1000000000000000055511151
+
+print(0.125)                      #0.125
+print(format(0.125, '.15f'))      #0.125000000000000
+print(format(0.125, '.25f'))      #0.1250000000000000000000000
+
+
