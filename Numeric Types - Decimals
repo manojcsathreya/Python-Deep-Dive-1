@@ -1,0 +1,207 @@
+'''
+Why do we use Decimal?
+Well, for some floats we don't have finite binary representation. Ex 0.1
+to overcome this we are using decimal.
+
+The decimal module
+
+float 0.1 → finite decimal expansion → infinite binary expansion 
+
+
+alternative to using the (binary) float type → avoids the approximation issues with floats
+
+finite number of significant digits → rational number 
+
+to add two fractions → common denominator → complex, requires extra memory
+
+Decimals have a context that controls certain aspects of working with decimals
+precision during arithmetic operations
+rounding algorithm
+
+This context can be global → the default context
+or temporary (local) → sets temporary settings without affecting the global settings
+
+import decimal
+default context → decimal.getcontext()
+local context → decimal.localcontext(ctx=None)
+                creates a new context, copied from ctx
+                or from default if ctx not specified
+                returns a context manager (use a with statement)
+                
+Working with Global and Local Contexts
+
+Global
+decimal.getcontext().rounding = decimal.ROUND_HALF_UP
+//decimal operations performed here will use the current default context
+
+Local
+with decimal.localcontext() as ctx:
+    ctx.prec = 2
+    ctx.rounding = decimal.ROUND_HALF_UP
+    //decimal operations performed here
+    //will use the ctx context
+    
+    
+Precision and Rounding
+ctx = decimal.getcontext() → context (global in this case)
+ctx.prec →  get or set the precision (value is an int)
+ctx.rounding → get or set the rounding mechanism (value is a string)
+ROUND_UP                rounds away from zero
+ROUND_DOWN              rounds towards zero
+ROUND_CEILING           rounds to ceiling (towards +∞)
+ROUND_FLOOR             rounds to floor (towards −∞)
+ROUND_HALF_UP           rounds to nearest, ties away from zero
+ROUND_HALF_DOWN         rounds to nearest, ties towards zero
+ROUND_HALF_EVEN         rounds to nearest, ties to even (least significant digit) (float rounding algorithm)
+
+
+'''
+
+import decimal
+from decimal import Decimal
+decimal.getcontext()
+'''
+Context(prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999, capitals=1, clamp=0, flags=[], traps=[InvalidOperation, DivisionByZero, Overflow])
+'''
+g_ctx = decimal.getcontext()
+g_ctx.prec  #28
+g_ctx.rounding  #'ROUND_HALF_EVEN'
+
+
+#we can change the values
+g_ctx.prec = 6
+g_ctx.rounding = decimal.ROUND_HALF_UP # or we can also use g_ctx.rounding = 'ROUND_HALF_UP'
+# WE do not use the alternate method as the chances of spelling it wrong is high
+g_ctx.prec  #6
+g_ctx.rounding #'ROUND_HALF_UP'
+
+#local context
+
+with decimal.localcontext() as ctx:
+    print(ctx.prec)      #28
+    print(ctx.rounding)  #ROUND_HALF_EVEN
+    
+
+with decimal.localcontext() as ctx:
+    ctx.prec = 10
+    print('local context precision is {0} and global context is {1}'.format(ctx.prec,g_ctx.prec)) #local context precision is 10 and global context is 6
+    
+print(decimal.getcontext().prec)#28
+
+
+x = Decimal('1.25')
+y = Decimal('1.35')
+with decimal.localcontext() as ctx:
+    ctx.rounding=decimal.ROUND_HALF_UP
+    print(round(x,1)) #1.3
+    print(round(y,1)) #1.4
+print(round(x,1)) #1.2
+print(round(y,1)) #1.4
+
+
+
+'''
+Constructing Decimal Objects
+
+Decimal(x) x can be a variety of types
+
+The Decimal class is in the decimal module
+
+integers a = Decimal(10)                        → 10
+other Decimal object
+strings a = Decimal('0.1')                      → 0.1
+tuples a = Decimal((1, (3, 1, 4, 1, 5), -4))    → -3.1415
+
+floats? yes, but not usually done
+Decimal(0.1) → 0.100000000000000005551
+Since 0.1 does not have an exact binary float representation
+it cannot be used to create an exact Decimal representation
+of itself
+→Use strings or tuples instead
+
+Using the tuple constructor
+How to represent using tuples?
+EX: 1.23 - (sign) 123 * 10e-2
+   -1.23 - (sign) 123 * 10e-2
+   
+Tuple representation: (sign,(d1,d2,d3....),exponent)
+sign is 0 if the sign of integer is positive else 1
+
+EX: -3.14
+Decimal(1,(3,1,4),-2)
+
+Context precision does not affect the constructor
+
+Context precision affects mathematical operations
+
+decimal.getcontext().prec = 2  global (default) context now has precision set to 2
+
+a = Decimal('0.12345')      a → 0.12345
+b = Decimal('0.12345')      b → 0.12345
+c = a + b a + b = 0.2469    c → 0.25
+
+
+Local vs Global Context
+
+decimal.getcontext().prec = 6
+
+a = Decimal('0.12345')
+b = Decimal('0.12345')
+print(a + b)   → 0.24690
+
+import decimal
+from decimal import Decimal
+
+with decimal.localcontext() as ctx:
+    ctx.prec = 2
+    c = a + b
+    print(c) → 0.25
+print(c) → 0.25 Oops! global precision is 6 but it is printing values upto two decimal places
+But why? C is getting calculated in the local context. and it cannot be changed when it is out of context.
+'''
+
+
+from decimal import Decimal
+import decimal
+
+#ints
+a = Decimal(10)
+b = Decimal(-10)
+print(format(a,'.25f')) #10.0000000000000000000000000
+print(format(b,'.25f')) #-10.0000000000000000000000000
+
+#strings
+a = Decimal('3.1354')
+b = Decimal('0.1')
+print(format(a,'.25f'))  #3.1354000000000000000000000
+print(format(b,'.25f'))  #0.1000000000000000000000000
+
+
+#tuples
+a = Decimal((1,(3,1,4,5),-3))
+print(format(a,'.25f')) #-3.1450000000000000000000000
+
+b = Decimal((0,(0,1),-3))
+print(format(b,'.25f')) #0.0010000000000000000000000
+
+# we should not use floats. By default if we give decimal(0.1), we are using floats. use strings or tuples instead
+a = Decimal(0.1)
+print(format(a,'.25f')) #0.1000000000000000055511151
+#instead
+a = Decimal('0.1')
+print(format(a,'.25f')) #0.1000000000000000000000000
+
+Decimal(0.1) == Decimal('0.1') #False
+Decimal(10) == Decimal('10')  #True
+
+a = Decimal('0.12345')
+b = Decimal('0.12345')
+g_ct = decimal.getcontext() #Context(prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999, capitals=1, clamp=0, flags=[], traps=[InvalidOperation, DivisionByZero, Overflow])
+g_ct.prec = 2
+print(g_ct.prec)
+print(a)  #0.12345. Wait the orecision was set to 2. Why is that displaying 5 digits?
+# well prec affects only operations and not displaying
+0.12345+0.12345 #0.2469
+g_ct.prec = 2
+print(a + b) #0.25
+
