@@ -1,0 +1,164 @@
+'''
+Some arithmetic operators don't work the same as floats or integers
+// and % →also divmod()
+The // and % operators still satisfy the usual equation: n = d * (n // d) + (n % d)
+But for integers, the // operator performs floor division → a // b = floor(a/b)
+For Decimals however, it performs truncated division → a // b = trunc(a/b)
+For positive number it does not matter.
+Watch for negative number!!
+Integer 10 // 3 → 3   Decimal(10) // Decimal(3) → Decimal(3)  - this is fine 
+integer -10 // 3 → -4  but for Decimal(-10) // Decimal(3) → Decimal(-3). well thats bcause it is trucationg
+
+However in all the cases, the equation is satisfied
+ n = d * (n // d) + (n % d) always
+ 
+ 
+ For other mathematical operation, we can use the math module. But, what math module does is it takes decimal and conerts that into float
+Not what we wantt
+so we use the decimal class functions instead
+
+'''
+
+import decimal
+from decimal import Decimal
+
+a = 10
+b = 3
+print(a//b, a%b) #3 1
+print(divmod(a,b)) #(3, 1)
+print(a == b*(a//b)+(a%b)) #True
+
+a = Decimal('10')
+b = Decimal('3')
+print(a//b, a%b) #3 1
+print(divmod(a,b)) #(Decimal('3'), Decimal('1'))
+print(a == b*(a//b)+(a%b)) #True
+
+a = -10
+b = 3
+print(a//b, a%b) #-4 2
+print(divmod(a,b)) #(-4, 2)
+print(a == b*(a//b)+(a%b)) #True
+
+a = Decimal('-10')
+b = Decimal('3')
+print(a//b, a%b) #-3 -1
+print(divmod(a,b)) #(Decimal('-3'), Decimal('=1'))
+print(a == b*(a//b)+(a%b)) #True
+
+#other math functions
+a = Decimal('0.1')
+print(a.ln())#-2.302585092994045684017991455
+print(a.exp()) #1.105170918075647624811707826
+print(a.sqrt()) #0.3162277660168379331998893544
+import math
+print(math.sqrt(a)) #0.31622776601683794
+
+x = 2
+x_dec = Decimal('2')
+root_float = math.sqrt(x)
+root_mixed = math.sqrt(x_dec)
+root_dec = x_dec.sqrt()
+
+print(format(root_float,'.27f'))
+print(format(root_mixed,'.27f'))
+print(format(root_dec,'.27f'))
+'''
+1.414213562373095145474621859
+1.414213562373095145474621859
+1.414213562373095048801688724
+'''
+
+print(root_float*root_float)
+print(root_mixed*root_mixed)
+print(root_dec*root_dec)
+'''
+2.0000000000000004
+2.0000000000000004
+1.999999999999999999999999999# Closer to 2
+'''
+
+'''
+There are some drawbacks to the Decimal class vs the floatclass
+
+- more memory overhead
+
+- not as easy to code: construction via strings or tuples
+
+- not all mathematical functions that exist in the math module have a Decimal counterpart
+
+- performance: much slower than floats (relatively)
+'''
+
+
+import decimal
+from decimal import Decimal
+import sys
+a = 10 
+print(sys.getsizeof(a)) #28
+b  =3.14
+print(sys.getsizeof(b)) #24
+c = Decimal('10.5')
+print(sys.getsizeof(c)) #104
+
+import time
+
+def run_float(n):
+    for i in range(n):
+        a = 3.1415
+        
+def run_decimal(n):
+    for i in range(n):
+        a = Decimal('3.1415')
+        
+start = time.perf_counter()
+run_float(10000000)
+end = time.perf_counter()
+print(end-start) #0.30078630000934936
+
+start = time.perf_counter()
+run_decimal(10000000)
+end = time.perf_counter()
+print(end-start) #3.6621737999957986
+
+
+def run_float(n):
+    a = 3.1415
+    for i in range(n):
+        a+a
+        
+def run_decimal(n):
+    a = Decimal('3.1415')
+    for i in range(n):
+        a + a
+        
+start = time.perf_counter()
+run_float(10000000)
+end = time.perf_counter()
+print(end-start) #0.5116606999945361
+
+start = time.perf_counter()
+run_decimal(10000000)
+end = time.perf_counter()
+print(end-start) #0.9687758999934886
+
+
+def run_float(n):
+    a = 3.1415
+    for i in range(n):
+        math.sqrt(a)
+        
+def run_decimal(n):
+    a = Decimal('3.1415')
+    for i in range(n):
+        a.sqrt()
+        
+start = time.perf_counter()
+run_float(5000000)
+end = time.perf_counter()
+print(end-start) #0.7038925000088057
+
+start = time.perf_counter()
+run_decimal(5000000)
+end = time.perf_counter()
+print(end-start) #15.241295599989826
