@@ -1,0 +1,506 @@
+'''
+Booleans
+The bool class PEP 285
+Python has a concrete bool class that is used to represent Boolean values.
+
+However, the bool class is a subclass of the int class
+
+issubclass(bool, int) → True
+i.e. they posses all the properties and methods of integers, and add some 
+specialized ones such as and, or, etc
+Two constants are defined: True and False
+
+They are singleton objects of type bool
+
+isinstance(True, bool) → True
+isinstance(True, int) → True
+
+is vs ==
+Because True and False are singleton objects, they will always retain their same memory address
+throughout the lifetime of your application
+
+So, comparisons of any Boolean expression to True and False can be performed using 
+either the is (identity) operator, or the == (equality) operator
+a == True a is True where a is a bool object
+
+But since bool objects are also int objects, they can also be interpreted as the integers 1 and 0
+int(True) → 1 int(False) → 0
+
+But: 
+True and 1 are not the same objects  id(True) id(1)
+False and 0 are not the same objects id(False) id(0)
+True is 1 →False
+True == 1 →True
+
+Booleans as Integers
+
+This can lead to "strange" behavior you may not expect!
+
+True > False → True
+
+In fact, any integer operation will also work with booleans (//, %, etc)
+True + True + True → 3 
+(True + True + True) % 2 → 1
+-True → -1
+100 * False → 0
+(1 == 2) == False → True (1 == 2) == 0 → True
+
+The Boolean constructor
+
+The Boolean constructor bool(x) returns True when x is True,and False when x is False
+Wow, that sounds like a useless constructor! 
+But not at all!
+
+What really happens is that many classes contain a definition of how to cast instances of 
+themselves to a Boolean
+
+Integers have a truth value defined according to this rule:
+bool(0) → False                 (0 is falsy)
+bool(x) → True for any int x 0  (x is truthy)
+
+– this is sometimes called the truth value (or truthyness) of an object
+(upcoming video)
+
+Examples:
+bool(0) → False
+bool(1) → True
+bool(100) → True
+bool(-1) → True
+
+'''
+issubclass(bool,int) #True
+type(True), id(True), int(True) #(bool, 140720708507472, 1)
+type(False), id(False), int(False) #(bool, 140720708507504, 0)
+
+isinstance(True, int) #True
+
+1 is True #False
+id(1) #140720708790064
+#id of 1 and true are different
+id(True),id(3<4) # (140720708507472, 140720708507472)
+
+
+'''
+Objects have Truth Values
+All objects in Python have an associated truth value
+We already saw this with integers (although to be fair, bool is a subclass of int)
+But this works the same for any object
+In general, the rules are straightforward
+
+Every object has a True truth value, except:
+• None
+• False
+• 0 in any numeric type (e.g. 0, 0.0, 0+0j, …)
+• empty sequences (e.g. list, tuple, string, …)
+• empty mapping types (e.g. dictionary, set, …)
+• custom classes that implement a __bool__ or __len__
+method that returns False or 0
+which have a False truth value
+
+Under the hood
+Classes define their truth values by defining a special instance method:
+__bool__(self) (or __len__ )
+
+Then, when we call bool(x) Python will actually executes x.__bool__()
+or __len__ if __bool__ is not defined if neither is defined, then True
+
+
+Example: Integers
+def __bool__(self):
+return self != 0
+
+When we call bool(100) Python actually executes 100.__bool__()
+and therefore returns the result of 100 != 0 which is True
+
+When we call bool(0) Python actually executes 0.__bool__()
+and therefore returns the result of 0 != 0 which is False
+
+We will cover this and many other special functions in a later section
+'''
+bool(100) #True
+(100).__bool__() #True
+(0).__bool__() #False
+
+from fractions import Fraction
+from decimal import Decimal
+bool(10), bool(1.5), bool(Fraction(3, 4)), bool(Decimal('10.5')) #(True, True, True, True)
+bool(0), bool(0.0), bool(Fraction(0,1)), bool(Decimal('0')), bool(0j) #(False, False, False, False, False)
+bool([1, 2, 3]), bool((1, 2, 3)), bool('abc'), bool(1j) #(True, True, True, True)
+
+help(list)
+'''
+List does not contain Boolean function. SO uses len function instead
+__len__(self, /):
+    Return len(self).
+'''
+
+bool([]), bool(()), bool('') #(False, False, False)
+bool({'a': 1}), bool({1, 2, 3})  #(True, True)
+bool({}), bool(set()) #(False, False)
+
+bool( None ) #False
+
+a = [1, 2, 3]
+if a:
+    print(a[0])
+else:
+    print('a is None, or a is empty')
+    
+#1
+
+a = []
+if a:
+    print(a[0])
+else:
+    print('a is None, or a is empty')
+    
+#a is None, or a is empty
+
+a = 'abc'
+if a:
+    print(a[0])
+else:
+    print('a is None, or a is empty')
+#a
+
+a = ''
+if a:
+    print(a[0])
+else:
+    print('a is None, or a is empty')
+    
+#a is None, or a is empty
+
+#The same expression
+a = 'abc'
+if a is not None and len(a) > 0:
+    print(a[0])
+else:
+    print('a is None, or a is empty') #a
+    
+a = 'abc'
+if a is not None:
+    print(a[0]) #a
+
+#but
+a = ''
+if a is not None:
+    print('Hello') #Hello
+    
+a = None
+if len(a) > 0:
+    print(a[0]) #TypeError: object of type 'NoneType' has no len()
+    
+a = None
+if a is not None and len(a) > 0:
+    print(a[0])
+else:
+    print('hello')
+# hello
+
+#wait. whats happening?
+#there should be an eror as None does not have any len method
+#order of operations matter
+#we'll discuss that later
+#if we ew write teh expression
+
+a = None
+if len(a) > 0 and a is not None:
+    print(a[0])
+#this gives us error
+
+
+'''
+Operator Precedence from highest to lowest precedence
+
+()
+
+< > <= >= == != in is
+
+or
+
+and
+
+not
+
+Ex:
+True or True and False →True and False →False
+
+(True or True) and False →True or False →True
+
+
+When in doubt, or to be absolutely sure, use parentheses!
+Also, use parentheses to make your code more human readable!
+
+a < b or a > c and not x or y
+
+(a < b) or ((a > c) and (not x)) or y
+
+True or (True and False)
+
+Short Circuit!!
+For And operator - if the first value is false, then the interpreter does not bother to evaluate the second expression
+
+Example
+Scenario: There is some data feed that lists a stock symbol, and some financial data.
+Your job is to monitor this feed, looking for specific stock symbols defined in some watch 
+list, and react only if the current stock price is above some threshold. Getting the current 
+stock price has an associated cost.
+
+if symbol in watch_list:
+if price(symbol) > threshold:
+# do something
+since calling the price() method has a cost, you would only want to call it if the symbol was on your watch list
+If Boolean expressions did not implement short-circuiting, you would probably write:
+
+But because of short-circuit evaluation you could write this equivalently as:
+
+if symbol in watch_list and price(symbol) > threshold:
+# do something
+
+
+Example
+name is a string returned from a nullable text field in a database
+perform some action if the first character of name is a digit (0-9)
+
+null → None
+''
+'abc'
+
+
+if name[0] in string.digits:
+# do something
+
+
+this code will break if name is None or an empty string
+
+
+because of short-circuiting and truth values
+if name and name[0] in string.digits:
+# do something
+if name is falsy (either None or an empty string)  then name[0] in string.digits is not evaluated
+
+'''
+
+False or True and False #Here True and False is evaluated first and thrn or coz of precedence
+
+#Shortcircuiting
+#we want to know if a is atleast twice b
+
+a = 10
+b = 2
+if a/b>2:
+    print('a is twice') #a is twice
+    
+    
+#what'd happen if b is 0? we have dividebyzero error
+#we have to hanle them seperately
+a = 10
+b = 2
+if b>0 and a/b>2:
+    print('a is twice') #a is twice
+    
+#or we have a better wy of doing this
+a = 10
+b = 2
+if b and a/b>2:
+    print('a is twice') #a is twice
+    
+#strings 
+import string
+a = 'bob'
+if a[0] not in string.digits:
+    print('Hi Bob')
+
+#wht if empty string?
+
+a = ''
+if len(a)>0 and a[0] not in string.digits:
+    print('Hi Bob')
+    
+#ok. but 
+a = None
+#we have to again handle that 
+if a is not None and len(a)>0 and a[0] not in string.digits:
+    print('hi Bob')
+
+#or we can do this instead
+if a and a[0] not in string.digits:
+    print('Hi bob')
+    
+    
+    
+'''
+Defintion of AND, OR and NOT in python
+
+Definition of or in Python
+
+X or Y If X is truthy, returns X, otherwise returns Y
+
+Definition of and in Python
+
+X and Y If X is falsy, returns X, otherwise returns Y
+
+We have to assign the string to a varibale. What if we have None and Empty strings?
+OKay. We can do this.
+
+a = s or 'NA'
+a gets assignmend with s if s in not none or an empty string. Other wise a gets assignmed with 'NA'
+
+We want to asssign the variable to some value but not zero. WHat if we have a 0 value?
+
+a = s or 1 if s is 0 then a gets assigned with 1
+
+How do we avoid divide by zero exception?
+
+a = demonimator and neumerator/denominator
+if the demonimator is zero a gets assigned to 0 whithout evaluating neumerator/denominator. we just avaoided div by zero error
+
+ex: computing an avg:
+avg = sum/n
+what of n is 0?
+avg = n and sum/n
+if n>=1, then we evaluate sum/n otherwise avg = n viz, 0
+
+Example
+You want to return the first character of a string s, or an empty string if the string is None or empty
+
+option1:
+    if s:
+        return s[0]
+    else:
+        return ''
+
+option 2:
+    a = s and s[0]
+    if s is an empty string we retun back the empty string. this does not handle empty string case
+    a = (s and s[0]) or ''
+    BAMMM!
+    if s is None
+    s and s[0] gets evaluated as False so as we have used or the second expression gets evaluated
+    viz ''
+    that gets returned
+    
+    
+The Boolean not
+
+not is a built-in function that returns a Boolean value
+
+not x →True if x is falsy
+      →False if x is truthy
+
+[] → falsy & not [] → True
+
+[1, 2] → truthy & not [1, 2] → False
+
+None → falsy & not None → True
+'''
+
+print('' or 'abc') #abc
+print(0 or 100) #100
+print([] or [1,2]) #[1,2]
+print([1,2] or [1,2,3]) #[1,2]
+
+
+def _or(a,b):
+    if a:
+        return a 
+    else:
+        return b
+    
+print(_or(0,100)== (0 or 100)) #True
+print(_or(None, 'n/a') ==( None or 'n/a')) #True
+print(_or('abc', 'n/a') == 'abc' or 'n/a') #True
+
+# but not same always
+print(1 or 1/0) #1
+print(_or(1,1/0)) #ZeroDivisionError
+#why? 1/0 gets evaluated first before it is assigned to b
+
+s1 = None
+s2 = ''
+s3 = 'abc'
+print((s1 and s1[0])or 'n/a')  #n/a
+print((s2 and s2[0]) or 'n/a') #n/a
+print((s3 and s3[0]) or 'n/a') #a
+
+'''
+Categories of Comparison Operators
+
+• binary operators
+• evaluate to a bool value
+
+
+Identity Operations  - is , is not -compares memory address – any type
+Value Comparisons    - == , !=     -compares values – different types OK,but must be compatible
+Ordering Comparisons - < <= > >=   -doesn't work for all types
+Membership Operations- in not in   -used with iterable types
+
+Numeric Types
+We will examine other types, including iterables, later in this course
+Value comparisons will work with all numeric types
+Mixed types (except complex) in value and ordering comparisons is supported
+
+Note: Value equality operators work between floats and Decimals, but as we have seen 
+before, using value equality with floats has some issues!
+
+10.0 == Decimal('10.0')             → True
+0.1 == Decimal('0.1')               → False
+Decimal('0.125') == Fraction(1, 8)  → True
+True == 1                           → True
+True == Fraction(3, 3)              → True
+
+
+
+Ordering Comparisons
+Again, these work across all numeric types, except for complex numbers
+
+1 < 3.14                            → True
+Fraction(22, 7) > math.pi           → True
+Decimal('0.5') <= Fraction(2, 3)    → True
+True < Decimal('3.14')              → True
+Fraction(2, 3) > False              → True
+
+
+
+Chained Comparisons
+a < b < c               → a < b and b < c
+a == b == c             → a == b and b == c
+
+1 == Decimal('1.0') == Fraction(1,1)
+1 == Decimal('1.5') == Fraction(3, 2) → False
+
+1 < 2 < 3 → 1 < 2 and 2 < 3   → True
+1 < math.pi < Fraction(22, 7) → 1 < math.pi and math.pi < Fraction(22, 7) → True
+
+
+
+Chained Comparisons
+a < b > c → a < b and b > c
+5 < 6 > 2 → 5 < 6 and 6 > 2 → True
+5 < 6 > 10 → 5 < 6 and 6 > 10 → False
+a < b < c < d → a < b and b < c and c < d
+1 < 2 < 3 < 4 → 1 < 2 and 2 < 3 and 3 < 4 → True
+1 < 10 > 4 < 5 → 1 < 10 and 10 > 4 and 4 < 5 → True
+if my_min == cnt < val > other <= my_max not in lst:
+# do something
+'''
+
+#The is and is not operators will work with any data type since they are comparing the memory addresses of the objects (which are integers)
+0.1 is (3+4j) #false
+'a' is [1, 2, 3] #False
+[1, 2] in [1, 2, 3] #False
+[1, 2] in [[1,2], [2,3], 'abc'] #True
+'key1' in {'key1': 1, 'key2': 2} #True
+1 in {'key1': 1, 'key2': 2} #False
+
+1 == '1' #False
+Decimal('0.1') == Fraction(1, 10) #True
+1 == 1 + 0j #true
+True == Fraction(2, 2) #true
+False == 0j #true
+1 + 1j < 2 + 2j # TypeError: '<' not supported between instances of 'complex' and 'complex'
+
+1 < 'a' #'<' not supported between instances of 'int' and 'str'
+Decimal('0.1') < Fraction(1, 2) #True
+
