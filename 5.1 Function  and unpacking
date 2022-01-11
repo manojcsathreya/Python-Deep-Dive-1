@@ -1,0 +1,705 @@
+'''
+Argument VS Parameter
+
+def my_func(a, b):
+# code here In this context, a and b are called parameters of my_func
+Also note that a and b are variables, local to my_func
+
+When we call the function:
+x = 10
+y = 'a'
+my_func(x, y)
+x and y are called the arguments of my_func
+Also note that x and y are passed by reference
+i.e. the memory addresses of x and y are passed
+
+x = 10
+y = 'a'
+my_func(x, y)
+
+def my_func(a, b):
+# code here
+
+Module Scope                   Function scope
+x      ----> 10(0xA13F) <----  a
+y      ----> 'a' (0xE345) <----b
+
+------------------------------------------------
+Positional and Keyword arguments
+
+Positional Arguments
+
+Most common way of assigning arguments to parameters: via the order in which they are passed
+
+def my_func(a, b):
+# code …
+
+my_func(10, 20) → a = 10, b = 20
+
+my_func(20, 10) → a = 20, b = 10
+
+i.e. their position
+
+Default Values
+A positional arguments can be made optional by specifying a default value for the corresponding parameter
+
+def my_func(a, b=100):
+# code …
+
+my_func(10, 20) → a = 10, b = 20
+my_func(5) → a = 5, b = 100
+
+Consider a case where we have three arguments, and we want to make one of them optional:
+def my_func(a, b=100, c):
+# code …
+
+How would we call this function without specifying a valuefor the second parameter?
+
+my_func(5, 25) ???
+
+If a positional parameter is defined with a default value every positional parameter after it must also be given a default value
+
+Default Values
+
+def my_func(a, b=5, c=10):
+# code …
+
+my_func(1) → a = 1, b = 5, c = 10
+my_func(1, 2) → a = 1, b = 2, c = 10
+my_func(1, 2, 3) → a = 1, b = 2, c = 3
+
+But what if we want to specify the 1st and 3rd arguments, but omit the 2nd argument?
+i.e. we want to specify values for a and c, but let b take on its default value?
+
+→Keyword Arguments (named arguments)
+
+my_func(a=1, c=2) → a = 1, b = 5, c = 2
+my_func(1, c=2) → a = 1, b = 5, c = 2
+
+Keyword Arguments
+
+Positional arguments can, optionally, be specified by using the parameter name whether or not the parameters have default values
+
+def my_func(a, b, c) 
+my_func(1, 2, 3)
+my_func(1, 2, c=3)
+my_func(a=1, b=2, c=3)
+my_func(c=3, a=1, b=2)
+But once you use a named argument, all arguments thereafter must be named too
+
+my_func(c=1, 2, 3)  --- ERROR
+my_func(1, b=2, 3)---- ERROR
+my_func(1, b=2, c=3) ---- COrrect
+my_func(1, c=3, b=2) ---- COrrect
+
+Keyword Arguments
+
+All arguments after the first named (keyword) argument, must be named too Default arguments may still be omitted
+
+def my_func(a, b=2, c=3)
+
+my_func(1)  ---- Valid  → a=1, b=2, c=3
+
+my_func(a=1, b=5) ---- Valid  → a=1, b=5, c=3
+
+my_func(c=0, a=1)  ---- Valid → a=1, b=2, c=0
+
+'''
+
+def myfunc(a,b=20,c=10):
+    print('a:{0}, b={1}, c={2}'.format(a,b,c))
+
+myfunc(1,2,3) #a:1, b=2, c=3
+myfunc(1, 2) #TypeError: myfunc() missing 1 required positional argument: 'c'
+myfunc(a=1, 4, 2) #SyntaxError: positional argument follows keyword argument
+myfunc(10, 20, 30) #a:10, b=20, c=30
+myfunc(10, 20) #a:10, b=20, c=10
+myfunc(10) #a:10, b=20, c=10
+myfunc(a = 40,c =100, b=1000) #a:40, b=1000, c=100
+myfunc(30,c =50) #a:30, b=20, c=50
+
+
+'''
+Unpacking iterables
+TUPLES
+(1, 2, 3)
+
+A Side Note on Tuples
+
+What defines a tuple in Python, is not (), but ,
+
+1, 2, 3 is also a tuple →(1, 2, 3) The () are used to make the tuple clearer
+
+To create a tuple with a single element:
+(1) will not work as intended → int
+1, or (1, ) → tuple
+The only exception is when creating an empty tuple: () or tuple()
+
+Packed Values
+
+Packed values refers to values that are bundled together in some way
+
+Tuples and Lists are obvious t = (1, 2, 3)
+l = [1, 2, 3]
+
+Even a string is considered to be a packed value: s = 'python'
+
+Sets and dictionaries are also packed values: set1 = {1, 2, 3}
+d = {'a': 1, 'b': 2, 'c': 3}
+
+In fact, any iterable can be considered a packed value
+
+Unpacking Packed Values
+Unpacking is the act of splitting packed values into individual variables contained in a list or tuple
+
+a, b, c = [1, 2, 3] 3 elements in [1, 2, 3] →need 3 variables to unpack
+
+this is actually a tuple of 3 variables: a, b and c
+
+a → 1 b → 2 c → 3
+
+Does this remind you of how positional arguments were assigned to parameters in function calls?
+
+The unpacking into individual variables is based on the relative positions of each element
+
+Unpacking other Iterables
+
+a, b, c = 'XYZ' → a = 'X' b = 'Y' c = 'Z'
+
+a, b, c = 10, 20, 'hello' → a = 10 b = 20 c = 'hello
+
+
+In fact, unpacking works with any iterable type
+
+for e in 'XYZ' →loop returns 'X', 'Y', 'Z'
+
+for e in 10, 20, 'hello' →loop returns 10, 20, 'hello'
+
+a = 10
+b = 20
+
+instead of writing we can write
+
+a, b = 10, 20
+
+Simple value swap
+
+we do not have to use temp variable to swp in python
+a,b = b,a
+how does this work?
+in python, lhs gets evalauated first so refrerence of b,a gets stored as a tuple
+and then those values are assigned to rhs
+
+Unpacking Sets and Dictionaries
+Dictionaries (and Sets) are unordered types.
+They can be iterated, but there is no guarantee the order of the results will match your literal!
+ n practice, we rarely unpack sets and dictionaries in precisely this way.
+ 
+d = {'key1': 1, 'key2': 2, 'key3': 3}
+
+for e in d →e iterates through the keys: 'key1', 'key2', 'key3'
+
+so, when unpacking d, we are actually unpacking the keys of d
+
+a, b, c = d 
+→ a = 'key1', b = 'key2', c='key3' or
+→ a = 'key2', b = 'key1', c='key3' or
+→ a = 'key3', b = 'key1', c='key2'
+etc…
+
+Example using Sets
+
+s = {'p', 'y', 't', 'h', 'o', 'n'}
+for c in s:
+print(c)
+
+p
+t
+h
+n
+o
+y
+
+assigning values
+
+a, b, c, d, e, f = s 
+a = 'p'
+b = 't'
+c = 'h'
+…
+f = 'y'
+
+'''
+a = (1,2,3)
+print(type(a)) #<class 'tuple'>
+
+a = 1,2,3
+print(type(a)) #<class 'tuple'>
+
+a = (1)
+print(type(a)) #<class 'int'>
+
+a = 1,
+b = (1,)
+print(type(a))   #<class 'tuple'>
+print(type(b))   #<class 'tuple'>
+
+a = ()
+print(type(a)) #<class 'tuple'>
+
+l = [1,2,3,4]
+a,b,c,d = l
+print(a,b,c,d)  #1,2,3,4
+
+a,b,c = 'XYZ'
+print(a,b,c)  #X Y Z
+
+#swapping
+a = 10
+b = 20
+print(id(a),id(b)) #140720708790352 140720708790672
+a,b = b,a
+print(a,b) #20 10
+print(id(a),id(b)) #140720708790672 140720708790352
+
+dict1 = {'p': 1, 'y': 2, 't': 3, 'h': 4, 'o': 5, 'n': 6}
+print(dict1) #{'p': 1, 'y': 2, 't': 3, 'h': 4, 'o': 5, 'n': 6}
+
+for c in dict1:
+    print(c)
+# p y t h o n
+
+a, b, c, d, e, f = dict1
+print(a) #p
+print(b) #y
+print(c) #t
+print(d) #h
+print(e) #o
+print(f) #n
+
+s = {'p', 'y', 't', 'h', 'o', 'n'}
+type(s) #tuple
+a, b, c, d, e, f = s
+print(a) #p
+print(b) #y
+print(c) #t
+print(d) #h
+print(e) #o
+print(f) #n
+
+'''
+The use case for *
+We don't always want to unpack every single item in an iterable
+We may, for example, want to unpack the first value, and then unpack the remaining values into 
+another variable
+
+l = [1, 2, 3, 4, 5, 6]
+We can achieve this using slicing:
+
+a = l[0]
+
+b = l[1:]
+
+or, using simple unpacking: a, b = l[0], l[1:]  (aka parallel assignment)
+
+We can also use the *operator: a, *b = l
+
+Apart from cleaner syntax, it also works with any iterable, not just sequence types!
+
+Much of this section applies to Python >= 3
+
+Usage with ordered types
+a, *b = [-10, 5, 2, 100] a = -10 b = [5, 2, 100] b is still a list!
+a, *b = (-10, 5, 2, 100) a = -10 b = [5, 2, 100] b is still a list!
+a, *b = 'XYZ' a = 'X' b = ['Y', 'Z'] b is still a list!
+
+The following also works:
+a, b, *c = 1, 2, 3, 4, 5 a = 1 b = 2 c = [3, 4, 5]
+
+a, b, *c, d = [1, 2, 3, 4, 5] a = 1 b = 2 c = [3, 4] d = 5
+
+a, *b, c, d = 'python' 
+a = 'p'
+c = 'o'
+b = ['y', 't', 'h']
+d = 'n'
+
+this is also a list!
+
+The *operator can only be used once in the LHS an unpacking assignment
+
+For obvious reason, you cannot write something like this:
+a, *b, *c = [1, 2, 3, 4, 5, 6]
+
+Since both *b and *c mean "the rest", both cannot exhaust the remaining elements
+
+------------------------------------------------------------
+Usage with ordered types
+
+We have seen how to use the *operator in the LHS of an assignment to unpack the RHS
+
+a, *b, c = {1, 2, 3, 4, 5}
+
+However, we can also use it this way:
+
+l1 = [1, 2, 3]
+l2 = [4, 5, 6]
+l = [*l1, *l2] → l = [1, 2, 3, 4, 5, 6]
+
+l1 = [1, 2, 3]
+l2 = 'XYZ'
+l = [*l1, *l2] → l = [1, 2, 3, 'X', 'Y', 'Z']
+------------------------------------------------------------
+Usage with unordered types
+
+Types such as sets and dictionaries have no ordering
+
+s = {10, -99, 3, 'd'}
+print(s) → {10, 3, 'd', -99}
+
+But, the *operator still works, since it works with any iterable
+s = {10, -99, 3, 'd'}
+a, *b, c = s a = 10 b = [3, 'd'] c = -99
+
+Sets and dictionary keys are still iterable, but iterating has no guarantee of preserving 
+the order in which the elements were created/added
+
+In practice, we rarely unpack sets and dictionaries directly in this way.
+
+------------------------------------------------------------
+Usage with unordered types
+
+It is useful though in a situation where you might want to create single collection containing all the 
+items of multiple sets, or all the keys of multiple dictionaries
+
+d1 = {'p': 1, 'y': 2}
+d2 = {'t': 3, 'h': 4}
+d3 = {'h': 5, 'o': 6, 'n': 7} Note that the key 'h' is in both d2 and d3
+
+l = [*d1, *d2, *d3] → ['p', 'y', 't', 'h', 'h', 'o', 'n']
+s = {*d1, *d2, *d3} → {'p', 'y', 't', 'h, 'o', 'n'}
+
+(order is not guaranteed)
+
+------------------------------------------------------------
+
+The **unpacking operator
+
+When working with dictionaries we saw that * essentially iterated the keys
+
+d = {'p': 1, 'y': 2, 't': 3, 'h': 4}
+a, *b = d 
+a = 'p' b = ['y', 't', 'h']
+(again, order is not guaranteed)
+
+We might ask the question: can we unpack the key-value pairs of the dictionary?
+
+Yes!
+We need to use the ** operator
+
+------------------------------------------------------------
+
+Using **
+d1 = {'p': 1, 'y': 2}
+d2 = {'t': 3, 'h': 4}
+d3 = {'h': 5, 'o': 6, 'n': 7} Note that the key 'h' is in both d2 and d3
+
+d = {**d1, **d2, **d3}
+
+→ {'p': 1, 'y': 2, 't': 3, 'h': 5, 'o': 6, 'n': 7}
+
+note that the **operator cannot be used in the LHS of an assignment
+
+Note that the value of 'h' in d3 "overwrote" the first value of 'h' found in d
+
+(order not guaranteed)
+
+------------------------------------------------------------
+Using **
+
+You can even use it to add key-value pairs from one (or more) dictionary into a dictionary literal:
+
+d1 = {'a': 1, 'b': 2}
+
+{'a': 10, 'c': 3, **d1} → {'a': 1, 'b': 2, 'c': 3}
+
+{**d1, 'a': 10, 'c': 3} → {'a': 10, 'b': 2, 'c': 3}
+
+(order not guaranteed)
+
+------------------------------------------------------------
+Nested Unpacking
+Python will support nested unpacking as well.
+l = [1, 2, [3, 4]] Here, the third element of the list is itself a list.
+We can certainly unpack it this way: a, b, c = l a = 1 b = 2 c = [3, 4]
+
+We could then unpack c into d and e as follows: d, e = c d = 3 e = 4
+
+Or, we could simply do it this way: a, b, (c, d) = [1, 2, [3, 4]] a = 1 b = 2
+c = 3 d = 4
+Since strings are iterables too: a, *b, (c, d, e) = [1, 2, 3, 'XYZ']
+a = 1 b = [2, 3] c, d, e = 'XYZ'
+→ c = 'X' d = 'Y' e = 'Z'
+
+------------------------------------------------------------
+
+The *operator can only be used once in the LHS an unpacking assignment
+How about something like this then?
+
+a, *b, (c, *d) = [1, 2, 3, 'python']
+
+Although this looks like we are using *twice in the same expression, the second *is actually in a 
+nested unpacking – so that's OK
+
+a = 1 b = [2, 3] 
+c, *d = 'python'
+c = 'p'
+d = ['y', 't', 'h', 'o', 'n']
+Try doing the same thing using slicing…
+'''
+
+l = [1, 2, 3, 4, 5, 6]
+a = l[0]
+b = l[1:]
+print(a) #1
+print(b) #[2, 3, 4, 5, 6]
+
+#simple
+a, b = l[0], l[1:]
+print(a) #1
+print(b) #[2, 3, 4, 5, 6]
+
+#more simpler
+a, *b = l
+print(a) #1
+print(b) ##[2, 3, 4, 5, 6]
+
+a, *b = -10, 5, 2, 100
+print(a) #-10
+print(b) #[5,2,100]
+
+a, *b = 'python'
+print(a) #p
+print(b) #['y','t','h','o','n']
+
+s = 'python'
+
+a, b, c, d = s[0], s[1], s[2:-1], s[-1]
+print(a) #p
+print(b) #y
+print(c) #tho
+print(d) #n
+
+a, b, *c, d = s
+print(a) #p
+print(b) #y
+print(c) #['t','h','o']
+print(d) #n
+
+print(c) #['t', 'h', 'o']
+c = ''.join(c)
+print(c) #tho
+
+l1 = [1, 2, 3]
+l2 = [4, 5, 6]
+l = [*l1, *l2]
+print(l) #[1, 2, 3, 4, 5, 6]
+
+l1 = [1, 2, 3]
+s = 'ABC'
+l = [*l1, *s]
+print(l) #[1, 2, 3, 'A', 'B', 'C']
+
+s = {10, -99, 3, 'd'}
+for c in s:
+    print(c)
+'''
+10
+3
+d
+-99
+'''
+s = {10, -99, 3, 'd'}
+a, b, *c = s
+print(a) #10
+print(b) #3
+print(c) #[-99,'d']
+
+s = {10, -99, 3, 'd'}
+print(list(s)) #[10, 3, 'd', -99]
+#or we can do this
+*a, = s
+print(a) #[10, 3, 'd', -99]
+
+s1 = {1, 2, 3}
+s2 = {3, 4, 5}
+s1 + s2 #TypeError: unsupported operand type(s) for +: 'set' and 'set'
+
+print(s1) #{1, 2, 3}
+print(s2) #{3, 4, 5}
+s1.union(s2) #{1, 2, 3, 4, 5}
+
+s1 = {1, 2, 3}
+s2 = {3, 4, 5}
+s3 = {5, 6, 7}
+s4 = {7, 8, 9}
+print(s1.union(s2).union(s3).union(s4)) #{1, 2, 3, 4, 5, 6, 7, 8, 9}
+print(s1.union(s2, s3, s4))             #{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+{*s1, *s2, *s3, *s4}                    #{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+d1 = {'key1': 1, 'key2': 2}
+d2 = {'key2': 3, 'key3': 3}
+[*d1, *d2]                              #['key1', 'key2', 'key2', 'key3']
+
+d1 = {'key1': 1, 'key2': 2}
+d2 = {'key2': 3, 'key3': 3}
+
+{**d1, **d2}                            #{'key1': 1, 'key2': 3, 'key3': 3}
+
+{**d2, **d1}                            #{'key2': 2, 'key3': 3, 'key1': 1}
+
+{'a': 1, 'b': 2, **d1, **d2, 'c':3}     #{'a': 1, 'b': 2, 'key1': 1, 'key2': 3, 'key3': 3, 'c': 3}
+
+{'key1': 100, **d1, **d2, 'key3': 200}  #{'key1': 1, 'key2': 3, 'key3': 200}
+
+a, b, (c, d) = [1, 2, ['X', 'Y']]
+print(a)
+print(b)
+print(c)
+print(d)
+
+'''
+1
+2
+'X'
+'Y'
+'''
+
+a, b, (c, d) = [1, 2, 'XY']
+print(a)
+print(b)
+print(c)
+print(d)
+'''
+1
+[2, 3]
+p
+y
+['t', 'h', 'o', 'n']
+'''
+
+a, b, (c, d, *e) = [1, 2, 'python']
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+'''
+1
+2
+p
+y
+['t', 'h', 'o', 'n']
+
+'''
+
+
+a, *b, (c, d, *e) = [1, 2, 3, 'python']
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+
+'''
+1
+[2, 3]
+p
+y
+['t', 'h', 'o', 'n']
+'''
+
+a, *b, tmp = [1, 2, 3, 'python']
+print(a)
+print(b)
+print(tmp)
+'''
+1
+[2, 3]
+python
+'''
+
+c, d, *e = tmp
+print(c)
+print(d)
+print(e)
+'''
+p
+y
+['t', 'h', 'o', 'n']
+'''
+
+a, *b, (c, d, *e) = [1, 2, 3, 'python']
+print(a) 
+print(b)
+print(c)
+print(d)
+print(e)
+'''
+1
+[2, 3]
+p
+y
+['t', 'h', 'o', 'n']
+'''
+
+l = [1, 2, 3, 'python']
+l[0], l[1:-1], l[-1][0], l[-1][1], list(l[-1][2:])
+#(1, [2, 3], 'p', 'y', ['t', 'h', 'o', 'n'])
+
+l = [1, 2, 3, 'python']
+a, b, c, d, e = l[0], l[1:-1], l[-1][0], l[-1][1], list(l[-1][2:])
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+'''
+1
+[2, 3]
+p
+y
+['t', 'h', 'o', 'n']'''
+
+l = [1, 2, 3, 4, 'unladen swallow']
+a, b, c, d, e = l[0], l[1:-1], l[-1][0], l[-1][1], list(l[-1][2:])
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+'''
+1
+[2,3,4]
+'u'
+'n'
+['l', 'a', 'd', 'e', 'n', ' ', 's', 'w', 'a', 'l', 'l', 'o', 'w']
+'''
+
+l = [1, 2, 3, 4, ['a', 'b', 'c', 'd']]
+a, b, c, d, e = l[0], l[1:-1], l[-1][0], l[-1][1], list(l[-1][2:])
+print(a) 
+print(b)
+print(c)
+print(d)
+print(e)
+'''
+1
+[2, 3, 4]
+a
+b
+['c', 'd']
+'''
+
+        
