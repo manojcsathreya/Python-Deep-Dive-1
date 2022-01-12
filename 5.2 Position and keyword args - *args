@@ -1,0 +1,135 @@
+'''
+*args
+Recall from iterable unpacking
+
+a, b, c = (10, 20, 30) → a = 10 b = 20 c = 30
+
+Something similar happens when positional arguments are passed to a function:
+
+def func1(a, b, c):
+# code
+
+func1(10, 20, 30) → a = 10 b = 20 c = 30
+
+*args
+
+Recall also: a, b, *c = 10, 20, 'a', 'b' → a=10 b=20 c=['a', 'b']
+
+Something similar happens when positional arguments are passed to a function:
+
+def func1(a, b, *c):
+# code
+
+func1(10, 20, 'a', 'b') → a=10 b=20
+c=('a', 'b')
+
+this is a tuple, not a list
+
+The *parameter name is arbitrary – you can make it whatever you want
+It is customary (but not required) to name it *args
+def func1(a, b, *args):
+# code
+
+*args exhausts positional arguments
+
+You cannot add more positional arguments after *args
+
+def func1(a, b, *args, d):
+# code
+
+func1(10, 20, 'a', 'b', 100)
+
+This will not work!
+However, we can use the below
+def func1(a,b ,*args,d):
+    print(args,d)   (3, 4, 5) 6
+
+func1(1,2,3,4,5,d=6)
+
+Unpacking arguments
+
+l = [10, 20, 30]
+
+def func1(a, b, c):
+# code
+
+func1(l)
+This will not work: coz you're only sending one argument that is a list
+
+But we can unpack the list first and then pass it to the function
+func1(*l) → a = 10 b = 20 c = 30
+
+'''
+def func1(a, b, *args):
+    print(a)
+    print(b)
+    print(args)
+    
+func1(1,2,'a','b')
+'''
+1
+2
+('a', 'b')
+
+A few things to note:
+
+Unlike iterable unpacking, *args will be a tuple, not a list.
+
+The name of the parameter args can be anything you prefer
+
+You cannot specify positional arguments after the *args parameter - this does something different that we'll cover in the next lecture.
+'''
+
+def func1(a, b, *vars):
+    print(a)
+    print(b)
+    print(vars)
+    
+func1(1,2,'a','b')
+'''
+1
+2
+('a', 'b')
+'''
+def func1(a, b, *c, d):
+    print(a)
+    print(b)
+    print(c)
+    print(d)
+    
+func1(10, 20, 'a', 'b', 100) #TypeError: func1() missing 1 required keyword-only argument: 'd'
+
+def avg(*args):
+    count =  len(args)
+    total = sum(args)
+    return total/count
+
+avg(2,2,4,4) #3.0
+
+#but what if I don't send any args
+avg() #ZeroDivisionError: division by zero
+
+#okay
+
+def avg(*args):
+    count = len(args)
+    total = sum(args)
+    return count and total/count
+avg(2,2,4,4) #3.0
+avg(0) #0.0
+
+def func1(a, b, c):
+    print(a)
+    print(b)
+    print(c)
+l1 = [1,2,3]    
+func1(*l1)
+# 1 2 3
+
+def func2(a,b,c,*d):
+    print(a)
+    print(b)
+    print(c)
+    print(d)
+
+func2(a=1,b = 2,c = 3,4,5) #SyntaxError: positional argument follows keyword argument
