@@ -1,0 +1,329 @@
+'''
+Keyword arguments
+
+Recall that positional parameters can, optionally be passed as named (keyword) arguments
+
+def func(a, b, c):
+# code
+
+func(1, 2, 3)           → a = 1, b = 2, c = 3
+func(a=1, c=3, b=2)     → a = 1, b = 2, c = 3
+
+Using named arguments in this case is entirely up to the caller.
+
+Mandatory Keyword Arguments
+We can make keyword arguments mandatory.
+To do so, we create parameters after the positional parameters have been exhausted
+
+def func(a, b, *args, d):
+#code
+In this case, *args effectively exhausts all positional arguments
+and d must be passed as a keyword (named) argument
+
+func(1, 2, 'x', 'y', d = 100)
+→ a = 1, b = 2, args = ('x', 'y'), d = 100
+
+func(1, 2, d = 100)
+→ a = 1, b = 2, args = (), d = 100
+
+func(1, 2) d was not a keyword argument  ERROR
+
+We can even omit any mandatory positional arguments:
+
+def func(*args, d):
+#code
+
+func(1, 2, 3, d=100) → args = (1, 2, 3), d = 100
+func(d=100)          → args = (), d = 100
+
+In fact we can force no positional arguments at all:
+def func(*, d):
+#code
+
+*indicates the "end" of positional arguments
+
+func(1, 2, 3, d=100) → Exception
+
+func(d=100)          → d = 100
+
+Putting it together
+'''
+def func1(a, b, c):
+    print(a, b, c)
+    
+func1(10, 20, 30) #10 20 30
+
+func1(4,b=4,c=3) #4 4 3
+
+func1(b=20, c=30, a=10) # 10 20 30
+'''
+Using a named argument is optional and up to the caller.
+
+What if we wanted to force calls to our function to use named arguments?
+
+We can do so by exhausting all the positional arguments, and then adding some additional parameters in teh function definition:
+'''
+
+def func1(a, b, *args, d):
+    print(a, b, args, d)
+    
+'''
+Now we will need at least two positional arguments, an optional (possibly even zero) number of additional arguments, and this extra argument which is supposed to go into d. This argument can only be passed to the function using a named (keyword) argument:
+
+So, this will not work:
+'''
+
+func1(10, 20, 'a', 'b', 100) #TypeError: func1() missing 1 required keyword-only argument: 'd'
+
+# But this will
+
+func1(10, 20, 'a', 'b', d=100) #func1(10, 20, 'a', 'b', d=100)
+
+'''
+As you can see, d took the keyword argument, while the remaining arguments were handled as positional parameters.
+
+We can even define a function that has only optional positional arguments and mandatory keyword arguments:
+'''
+
+def func1(*args, d):
+    print(args)
+    print(d)
+    
+func1(1, 2, 3, d='hello')  #(1, 2, 3) hello
+
+func1(d=1) # () 1
+
+func1() #Typerror
+
+def func1(*args, d='n/a'):
+    print(args)
+    print(d)
+    
+func1(1,2,3,d=4) # (1,2,3) 4
+
+func1(1,2,3) #(1,2,3) 'n/a'
+
+func1() #() 'n/a'
+
+'''
+Sometimes we want only keyword arguments, in which case we still have to exhaust the positional arguments first - but we can use the following syntax if we do not want any positional parameters passed in:
+'''
+
+def func1(*, a, b):
+    print(a)
+    print(b)
+    
+func1(a=10, b=20) #10 20
+
+func1(10, 20) # TypeError
+
+#Unlike positional parameters, keyword arguments do not have to be defined with non-defaulted and then defaulted arguments:
+
+def func1(a, *, b='hello', c):
+    print(a, b, c)
+func1(5, c='bye') #5 hello bye
+
+#We can also include positional non-defaulted (first), positional defaulted (after positional non-defaulted) followed lastly (after exhausting positional arguments) by keyword args (defaulted or non-defaulted in any order)
+
+def func1(a, b=20, *args, d=0, e='n/a'):
+    print(a, b, args, d, e)
+    
+func1(5, 4, 3, 2, 1, d=0, e='all engines running') #5 4 (3, 2, 1) 0 all engines running
+
+func1(0, 600, d='goooood morning', e='python!') #0 600 () goooood morning python!
+
+func1(11, 'm/s', 24, 'mph', d='unladen', e='swallow') #11 m/s (24, 'mph') unladen swallow
+
+def funcc(a,b,*args,d):
+    print(a,b,args,d)
+    
+funcc(1,2,d=3) #1 2 () 3
+
+
+def funcc(a=1,b=1,*args,d):
+    print(a,b,args,d)
+    
+funcc(1,2,d=3) #1 2 () 3
+
+
+def funcc(a=1,b=1,*args,d):
+    print(a,b,args,d)
+    
+funcc(1,d=3) #1 1 () 3
+
+
+
+def fcun11(a,b):
+    print(a,b)
+func11(a=2,a=5)#SyntaxError: keyword argument repeated
+
+'''
+**kwargs
+
+*args is used to scoop up variable amount of remaining positional arguments →tuple
+
+**kwargs is used to scoop up a variable amount of remaining keyword arguments →dictionary
+
+The parameter name args is arbitrary – *is the real performer here
+
+The parameter name kwargs is arbitrary – **is the real performer here
+
+**kwargs can be specified even if the positional arguments have not been exhausted
+
+No parameters can come after **kwargs
+
+(unlike keyword-only arguments)
+
+Example
+
+def func(*, d, **kwargs):
+# code
+
+func(d=1, a=2, b=3) → d = 1 kwargs = {'a': 2, 'b': 3}
+
+func(d=1) → d = 1 kwargs = {}
+
+Example
+def func(**kwargs):
+# code
+func(a=1, b=2, c=3) → kwargs = {'a': 1, 'b': 2, 'c': 3}
+func() → kwargs = {}
+
+def func(*args, **kwargs):
+# code
+func(1, 2, a=10, b=20) → args = (1, 2) kwargs = {'a': 10, 'b': 20}
+
+func() →args = () kwargs = {}
+'''
+
+def func(**kwargs):
+    print(kwargs)
+    
+func(x=100, y=200) #{'x': 100, 'y': 200}
+
+def func(*args, **kwargs):
+    print(args)
+    print(kwargs)
+    
+func(1, 2, a=100, b=200) #(1, 2) {'a': 100, 'b': 200}
+
+#Note: You cannot do the following:
+def func(*, **kwargs):
+    print(kwargs)
+#SyntaxError: named arguments must follow bare *
+#There is no need to even do this, since **kwargs essentially indicates no more positional arguments.
+
+def func(a, b, **kwargs):
+    print(a)
+    print(b)
+    print(kwargs)
+    
+func(1, 2, x=100, y=200) #1 2 {'x': 100, 'y': 200}
+
+#Also, you cannot specify parameters after **kwargs has been used:
+def func(a, b, **kwargs, c): #SyntaxError: invalid syntax
+    pass
+
+#If you want to specify both specific keyword-only arguments and **kwargs you will need to first get to a point where you can define a keyword-only argument (i.e. exhaust the positional arguments, using either *args or just *)
+
+def func(*, d, **kwargs):
+    print(d)
+    print(kwargs)
+    
+func(d=1, x=100, y=200) #1 {'x': 100, 'y': 200}
+
+'''
+PUTTING IT ALL TOGETHER!!!!!!!
+
+Recap
+
+positional arguments 
+
+1.specific      -       may have default values
+2.*args         -       collects, and exhausts remaining positional arguments
+3. *            -       indicates the end of positional arguments (effectively exhausts)
+
+keyword-only arguments:
+1.             -        after positional arguments have been exhausted 
+2.specific     -        may have default values
+3.**kwargs     -        collects any remaining keyword arguments
+
+'''
+
+def func(a, b):
+    print(a, b)
+    
+func('hello', 'world') #hello world
+func(b='world', a='hello') ##hello world
+
+def func(a, b='world', c=10):
+    print(a, b, c)
+func('hello') #hello world 10
+func('hello', c='!') #hello world !
+
+def func(a, b, *args):
+    print(a, b, args)
+
+func(1, 2, 'x', 'y', 'z') #1 2 ('x', 'y', 'z')
+#Note that we cannot call the function this way:
+func(b=2, a=1, 'x', 'y', 'z')
+#SyntaxError: positional argument follows keyword argument
+
+def func(*, a, b):
+    print(a, b)
+    
+func(a=1, b=2) # 12
+
+def func(*, a=1, b):
+    print(a, b)
+func(a=10, b=20) #10 20
+func(b=2) #1 2
+
+def func(a, b, *, c, d):
+    print(a, b, c, d)
+
+func(1, 2, c=3, d=4) #1 2 3 4
+func(1, 2, d=4, c=3) #1 2 3 4
+func(1, c=3, d=4, b=2) #1 2 3 4
+
+
+def func(a, b=2, *, c, d=4):
+    print(a, b, c, d)
+    
+func(1, c=3) #1 2 3 4
+func(c=3, a=1) #1 2 3 4 
+func(c=3, a=1, b=2, d=4) # 1 2 3 4
+func(1, 2, c=3, d=4) # 1 2 3 4
+
+
+def func(a, b=2, *args, c=3, d):
+    print(a, b, args, c, d)
+    
+func(1, 2, 'x', 'y', 'z', c=3, d=4) # 1 2 x y z 3 4
+func(1, 'x', 'y', 'z', c=3, d=4) # 1 x y z 3 4
+
+def func(a, b, *, c, d=4, **kwargs):
+    print(a, b, c, d, kwargs)
+
+func(1, 2, c=3, x=100, y=200, z=300)  # 1 2 3 4 {'x': 100, 'y': 200, 'z': 300}
+func(x=100, y=200, z=300, c=3, b=2, a=1) # 1 2 3 4 {'x': 100, 'y': 200, 'z': 300}
+
+def func(a, b, *args, c, d=4, **kwargs):
+    print(a, b, args, c, d, kwargs)
+    
+func(1, 2, 'x', 'y', 'z', c=3, d=5, x=100, y=200, z=300) # 1 2 (x y z z) 3 5  {'x': 100, 'y': 200, 'z': 300}
+
+def func(*args, **kwargs):
+    print(args, kwargs)
+    
+func(1, 2, 3, x=100, y=200, z=300) #(1, 2, 3) {'x': 100, 'y': 200, 'z': 300}
+
+#The print Function
+
+print(1, 2, 3)
+print(1, 2, 3, sep='--')
+print(1, 2, 3, end='***\n')
+print(1, 2, 3, sep='\t', end='\t***\t')
+print(4, 5, 6, sep='\t', end='\t***\n')
+
+    
