@@ -1,0 +1,24 @@
+#Python has a built-in sorted method that can be used to sort any iterable. 
+#It will use the default ordering of the particular items, but sometimes you may want to (or need to) specify a different criteria for sorting.
+
+l = ['a', 'B', 'c', 'D']
+sorted(l) #['B', 'D', 'a', 'c']  -- Thsis is because of ASCII values
+sorted(l, key=str.upper)  #['a', 'B', 'c', 'D']
+
+#We could have used a lambda here (but you should not, this is just to illustrate using a lambda in this case):
+sorted(l, key = lambda s: s.upper()) #['a', 'B', 'c', 'D']
+#Let's look at how we might create a sorted list from a dictionary
+d = {'def': 300, 'abc': 200, 'ghi': 100}
+d #{'def': 300, 'abc': 200, 'ghi': 100}
+sorted(d) #['abc', 'def', 'ghi']
+
+#What happened here?
+#Remember that iterating dictionaries actually iterates the keys - so we ended up with tyhe keys sorted alphabetically.
+#What if we want to return the keys sorted by their associated value instead?
+
+sorted(d, key=lambda k: d[k]) #['ghi', 'abc', 'def']
+
+#And here's another example where we want to sort a list of strings based on the last character of the string:
+l = ['Cleese', 'Idle', 'Palin', 'Chapman', 'Gilliam', 'Jones']
+sorted(l) #['Chapman', 'Cleese', 'Gilliam', 'Idle', 'Jones', 'Palin']
+sorted(l, key=lambda s: s[-1]) #['Cleese', 'Idle', 'Gilliam', 'Palin', 'Chapman', 'Jones']
